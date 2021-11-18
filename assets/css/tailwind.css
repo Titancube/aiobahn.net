@@ -1,0 +1,73 @@
+/**
+ * @license
+ * MyFonts Webfont Build ID 3958635, 2020-10-08T15:19:07-0400
+ *
+ * The fonts listed in this notice are subject to the End User License
+ * Agreement(s) entered into by the website owner. All other parties are
+ * explicitly restricted from using the Licensed Webfonts(s).
+ *
+ * You may obtain a valid license at the URLs below.
+ *
+ * Webfont: EurostileCandyLTPro-SmBd by Linotype
+ * URL: https://www.myfonts.com/fonts/linotype/eurostile-candy/pro-semibold/
+ *
+ * Webfont: EurostileCandyLTPro-Regular by Linotype
+ * URL: https://www.myfonts.com/fonts/linotype/eurostile-candy/pro-regular/
+ *
+ * Webfont: EurostileCandyLTPro-Bold by Linotype
+ * URL: https://www.myfonts.com/fonts/linotype/eurostile-candy/pro-bold/
+ *
+ *
+ * Webfonts copyright: Copyright &amp;#x00A9; 2008 Linotype GmbH, www.linotype.com. All rights reserved. This font software may not be reproduced, modified, disclosed or transferred without the express written approval of Linotype GmbH. Eurostile is a trademark of Linotype GmbH and
+ *
+ * © 2020 MyFonts Inc
+*/
+
+/* @import must be at top of file, otherwise CSS will not work */
+@import url('//hello.myfonts.net/count/3c676b');
+
+@font-face {
+  font-family: 'EurostileCandyLTPro-Regular';
+  src: url('@/assets/webFonts/EurostileCandyLTPro-Regular/font.woff2')
+      format('woff2'),
+    url('@/assets/webFonts/EurostileCandyLTPro-Regular/font.woff')
+      format('woff');
+}
+@font-face {
+  font-family: 'EurostileCandyLTPro-SmBd';
+  src: url('@/assets/webFonts/EurostileCandyLTPro-SmBd/font.woff2')
+      format('woff2'),
+    url('@/assets/webFonts/EurostileCandyLTPro-SmBd/font.woff') format('woff');
+}
+@font-face {
+  font-family: 'EurostileCandyLTPro-Bold';
+  src: url('@/assets/webFonts/EurostileCandyLTPro-Bold/font.woff2')
+      format('woff2'),
+    url('@/assets/webFonts/EurostileCandyLTPro-Bold/font.woff') format('woff');
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  font-family: 'EurostileCandyLTPro-Regular';
+  color: hsl(241, 89%, 73%);
+}
+
+.mainbox {
+  @apply w-full md:py-32 py-4 mx-auto;
+}
+
+.bg-aio {
+  background-color: hsl(241, 89%, 73%);
+}
+
+.text-aio {
+  color: hsl(241, 89%, 73%);
+}
+
+.border-aio {
+  border-color: hsl(241, 89%, 73%);
+}
