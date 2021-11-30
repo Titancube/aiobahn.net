@@ -1,41 +1,57 @@
 <template>
   <section class="mainbox">
-    <div class="container mx-auto flex justify-center">
+    <div class="container lg:w-2/3 mx-auto">
       <div class="text-center">
-        <p>Aiobahn</p>
+        <div v-html="aioSays" class="text-center whitespace-pre-wrap aiosays mb-16"></div>
         <table class="border-aio border-separate">
           <tr v-for="item in links" :key="item.content">
-            <td class="border border-aio px-8 py-4">
-              <a :href="item.url" target="_blank"><img :src="item.image" alt="" /></a>
+            <td class="border border-aio px-4 py-2 w-1/3">
+              <a :href="item.url" target="_blank"><img :src="item.image" class="mx-auto" alt="" /></a>
             </td>
-            <td class="border border-aio px-8 py-4">{{ item.content }}</td>
+            <td class="border border-aio px-4 py-2 w-2/3">{{ item.content }}</td>
           </tr>
         </table>
       </div>
+      <AtomsBackBtn class="mx-auto" />
     </div>
   </section>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
+import { db } from '~/plugins/firebase'
+import { query, collection, getDocs, orderBy, getDoc, doc } from 'firebase/firestore'
 
 @Component
 export default class Link extends Vue {
-  aioBanner: string = ''
-  links: ILink[] = [
-    {
-      image:
-        'https://firebasestorage.googleapis.com/v0/b/aioweb-45ddb.appspot.com/o/1591912991000-as4kla.bmp?alt=media&token=fd1867f9-840d-4bbf-96ea-8e69c365b63b',
-      url: 'https://google.com/',
-      content: '描いた絵などを載せています！（かんりにん：AS4KLA）',
-    },
-    {
-      image:
-        'https://firebasestorage.googleapis.com/v0/b/aioweb-45ddb.appspot.com/o/1626709795000-IMG_0944.GIF?alt=media&token=3f5ca953-0861-458e-8191-c2366aebc84c',
-      url: 'https://google.com/',
-      content: '猫ちゃん育成日記。（かんりにん：Izmi）',
-    },
-  ]
+  aioSays: string = ''
+  links: ILink[] = []
+
+  async getLinks() {
+    const res = await getDocs(query(collection(db, 'Link'), orderBy('date', 'asc')))
+    res.forEach((doc) => {
+      this.links.push({
+        title: doc.data().title,
+        url: doc.data().href,
+        content: doc.data().desc,
+        image: doc.data().banner,
+      })
+    })
+  }
+
+  async getSays() {
+    const res = await getDoc(doc(db, 'Aiosays', 'something'))
+    try {
+      if (res.exists()) {
+        this.aioSays = res.data().content
+      }
+    } catch (error) {}
+  }
+
+  mounted() {
+    this.getLinks()
+    this.getSays()
+  }
 }
 </script>
 
@@ -43,5 +59,12 @@ export default class Link extends Vue {
 table {
   border: 4px outset;
   border-color: hsl(241, 89%, 73%);
+}
+
+.aiosays p img {
+  margin: 0 auto;
+}
+.aiosays p {
+  @apply text-center;
 }
 </style>

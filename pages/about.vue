@@ -6,7 +6,7 @@
         <img :src="imageSrc" class="mx-auto" alt="" />
       </div>
       <!-- About content -->
-      <div class="my-4 w-full justify-center whitespace-pre-wrap">{{ content }}</div>
+      <div class="my-4 w-full justify-center whitespace-pre-wrap" v-html="content"></div>
       <AtomsBackBtn />
     </div>
   </section>
@@ -21,11 +21,22 @@ import { doc, getDoc } from 'firebase/firestore'
 export default class about extends Vue {
   imageSrc: string = ''
   content: string = ''
-  async mounted() {
-    const res = doc(db, 'About', '4VZ5rTVkuJ3lPuOgNCzh')
-    const contents = await getDoc(res)
 
-    console.log(contents.data())
+  async get() {
+    const docSnap = await getDoc(doc(db, 'About', '4VZ5rTVkuJ3lPuOgNCzh'))
+
+    try {
+      if (docSnap.exists()) {
+        this.imageSrc = docSnap.data().picture
+        this.content = docSnap.data().desc
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  mounted() {
+    this.get()
   }
 }
 </script>

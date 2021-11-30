@@ -12,11 +12,7 @@
         <p class="text-2xl font-bold">clients</p>
         <hr class="border border-aio w-full ml-4" />
       </div>
-      <ul class="list-disc list-inside w-2/3 mx-auto">
-        <li v-for="item in clients" :key="item.title">
-          <a :href="item.url" target="_blank">{{ item.title }}</a>
-        </li>
-      </ul>
+      <div class="list-disc list-inside w-2/3 mx-auto" v-html="clients"></div>
       <AtomsBackBtn />
     </div>
   </section>
@@ -24,18 +20,40 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
+import { db } from '~/plugins/firebase'
+import { collection, orderBy, getDocs, query, getDoc, doc } from 'firebase/firestore'
 
 @Component
 export default class works extends Vue {
-  works: IWork[] = [
-    { title: 'grayscale [w/ phritz ft. yaginuma kana]', url: 'https://youtu.be/msRE9gf51F0' },
-    { title: 'wish [ft. somunia]', url: 'https://youtu.be/L2t_ZE5WMrw' },
-  ]
+  works: IWork[] = []
 
-  clients: IWork[] = [
-    { title: 'kolme - avex entertainment inc.', url: 'https://avex.jp/kolme/discography/detail.php?id=1016401' },
-    { title: 'den-on-bu - bandai namco entertainment inc.', url: 'https://denonbu.jp/' },
-  ]
+  clients: string = ''
+
+  async get() {
+    // Get works
+    const getWorks = await getDocs(query(collection(db, 'Works'), orderBy('rDate', 'desc')))
+    getWorks.forEach((doc) => {
+      this.works.push({
+        title: doc.data().title,
+        url: doc.data().href,
+        rDate: doc.data().rDate,
+      })
+    })
+
+    // Get clients
+    const getClients = await getDoc(doc(db, 'Clients', 'Content'))
+    try {
+      if (getClients.exists()) {
+        this.clients = getClients.data().content
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  mounted() {
+    this.get()
+  }
 }
 </script>
 
