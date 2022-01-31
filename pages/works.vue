@@ -13,13 +13,15 @@
         <hr class="border border-aio w-full ml-4" />
       </div>
       <div class="list-disc list-inside w-2/3 mx-auto" v-html="clients"></div>
-      <AtomsBackBtn />
+      <div class="grid">
+        <AtomsBackBtn class="content-center" />
+      </div>
     </div>
   </section>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'nuxt-property-decorator'
+import { Component, Vue } from 'nuxt-property-decorator'
 import { db } from '~/plugins/firebase'
 import { collection, orderBy, getDocs, query, getDoc, doc } from 'firebase/firestore'
 
