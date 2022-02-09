@@ -5,11 +5,17 @@ declare interface IMenu {
 }
 
 declare interface INews {
+  content: string
+  date: Date
+  link?: string
+}
+
+declare interface IArticle {
   title: string
   url?: string
 }
 
-declare interface IWork extends INews {
+declare interface IWork extends IArticle {
   rDate: string
 }
 declare interface ILink {
