@@ -31,12 +31,20 @@
       <div class="flex mt-12">
         <div class="flex justify-center w-1/2">
           <ul class="list-disc list-inside max-h-48 overflow-y-auto max-w-[300px]">
-            <li v-for="post in news" :key="post.title" class="border-b border-aio last-of-type:border-none py-2">
-              <a target="_blank" class="hover:underline" :href="nullifyUrl(post.url)">{{ post.title }}</a>
+            <li v-for="post in news" :key="post.date" class="border-b border-aio last-of-type:border-none py-2">
+              <!-- Puts <a> tag if url exists -->
+              <a v-if="post.link" target="_blank" class="hover:underline" :href="nullifyUrl(post.link)">{{
+                post.content
+              }}</a>
+              <!-- Puts <span> tag if not -->
+              <span v-else>{{ post.content }}</span>
             </li>
           </ul>
         </div>
-        <div class="flex justify-center w-1/2">あなたは 0021935 人目のお客様です</div>
+        <div class="flex justify-center w-1/2 items-center">
+          あなたは
+          <span class="bg-black text-yellow-400 mx-2 px-2 py-1 font-serif align-middle">0021935</span> 人目のお客様です
+        </div>
       </div>
     </div>
   </main>
@@ -45,20 +53,34 @@
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
 import { Generic } from '~/plugins/data'
+import { db } from '~/plugins/firebase'
+import { collection, orderBy, getDocs, query } from 'firebase/firestore'
 
 @Component({ layout: 'main' })
 export default class index extends Vue {
-  news: INews[] = [
-    { title: "「grayscale」がリリースされました ['03/10/13]", url: 'https://youtu.be/msRE9gf51F0' },
-    { title: "「wish ft. somunia」がリリースされました ['03/08/18]", url: 'https://youtu.be/L2t_ZE5WMrw' },
-    { title: 'Post with blank url property', url: '' },
-    { title: 'Post with no url property' },
-  ]
-
+  news: INews[] = []
   menus = Generic.menus
 
+  // Nullify empty link or url to prevent <a> tag putting underlines
   nullifyUrl(url: string | undefined) {
     return url ? (url.length > 0 ? url : null) : null
+  }
+
+  // Get news
+  async get() {
+    const getNews = await getDocs(query(collection(db, 'News'), orderBy('date', 'desc')))
+    getNews.forEach((doc) => {
+      this.news.push({
+        content: doc.data().content,
+        date: doc.data().date,
+        link: doc.data().link,
+      })
+    })
+  }
+
+  // Execute on page load
+  mounted() {
+    this.get()
   }
 }
 </script>
