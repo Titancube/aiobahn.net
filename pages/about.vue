@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'nuxt-property-decorator'
+import { Component, Vue } from 'nuxt-property-decorator'
 import { db } from '~/plugins/firebase'
 import { doc, getDoc } from 'firebase/firestore'
 
